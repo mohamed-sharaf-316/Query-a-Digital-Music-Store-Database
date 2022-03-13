@@ -1,0 +1,43 @@
+/* Query 1 */
+SELECT g.Name,
+       sum(il.Quantity*il.UnitPrice) TotalSales
+FROM Genre g
+JOIN Track t ON g.GenreId = t.GenreId
+JOIN InvoiceLine il ON t.TrackId = il.TrackId
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 5;
+
+/* Query 2 */
+SELECT a.Name Artist,
+       sum(il.Quantity*il.UnitPrice) Sales
+FROM Artist a
+JOIN Album al ON a.ArtistId = al.ArtistId
+JOIN Track t ON al.AlbumId = t.AlbumId
+JOIN Genre g ON g.GenreId = t.GenreId
+AND g.Name = 'Rock'
+JOIN InvoiceLine il ON il.TrackId = t.TrackId
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 5;
+
+/* Query 3 */
+SELECT a.Name,
+       count(al.Title) AlbumCount
+FROM Artist a
+JOIN Album al ON a.ArtistId = al.ArtistId
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 5;
+
+/* Query 4 */
+SELECT g.Name Genre,
+       avg(t.Milliseconds)/60000 AvgMinutes
+FROM Genre g
+JOIN Track t ON g.GenreId = t.GenreId
+WHERE t.Milliseconds >
+    (SELECT avg(t.Milliseconds)/60000
+     FROM Track t)
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 5;
